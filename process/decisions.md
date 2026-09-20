@@ -3,7 +3,23 @@
 
 **ADR-001 | 2026-09-20 | WebGPU como motor principal, WGSL escrito a mano; WebGL2 como fallback de visualización**
 Descartadas: Canvas 2D (lento con muchas capas/blend), solo WebGL2 (sin compute shaders), rust-gpu (toolchain frágil).
-Razón: compute shaders, texturas float, cercano a Metal; estándar moderno = valor de portafolio. Estado: vigente (revalidar soporte en S0-01).
+Razón: compute shaders, texturas float, cercano a Metal; estándar moderno = valor de portafolio. Estado: vigente.
+
+**Revalidación S0-01 (2026-09-20)**: soporte confirmado, decisión se sostiene. WebGPU alcanzó
+Candidate Recommendation en marzo 2026 y caniuse reporta ~82–85% de cobertura global a mediados de
+2026 (fuentes: caniuse, gpuweb/implementation-status; el número exacto varía por fecha de consulta,
+tomarlo como orden de magnitud, no como cifra exacta).
+- **Chrome/Edge**: activado por defecto desde Chrome 113 (2023). En Android funciona si el hardware
+  es reciente (no todos los dispositivos).
+- **Safari**: activado por defecto desde Safari 26 — macOS Tahoe 26, iOS 26, iPadOS 26 y visionOS 26
+  (fines de 2025). Antes de esa versión no había soporte por defecto; importa para el piso mínimo de
+  versión de Safari/iOS que la app puede prometer.
+- **Firefox**: activado por defecto en Windows desde la v141; en macOS (solo Apple Silicon) desde la
+  v145. **Linux**: aún no por defecto — solo en Nightly, Mozilla lo espera para 2026. **Android**:
+  aún detrás de una flag.
+- Riesgo que se mantiene: Firefox/Linux y Firefox/Android sin fecha exacta de default → el fallback
+  WebGL2 (visualización y composición básica) sigue siendo necesario, no es opcional a futuro cercano.
+  Confirmar con un aviso honesto en la UI cuando se caiga a ese fallback (architecture.md §4).
 
 **ADR-002 | 2026-09-20 | React 19 + Vite + Tailwind v4 para la UI**
 Descartadas: Svelte (usado por Graphite), Vue. Razón: dominio del autor; ecosistema (Radix, cmdk, Motion). Estado: vigente.

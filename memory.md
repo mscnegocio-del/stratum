@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo + spikes WebGPU S0-08 y S0-09 construidos)
+> Última actualización: 2026-09-20 (sesión 2: monorepo, spikes S0-08/S0-09 y revalidación S0-01)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -18,6 +18,9 @@
 - [x] S0-04 Vitest 5 (3 tests en core) + Playwright 1.63 (smoke E2E, pasa en Chromium)
 - [x] S0-05 CI con dos jobs: `check/test/build` y `e2e` con reporte como artefacto
 - [x] Versiones del catálogo confirmadas contra npm: Vite 8.3, React 19.3, Tailwind 4.3, ONNX RT Web 1.30
+- [x] S0-01 Soporte de WebGPU revalidado (caniuse + gpuweb): ~82–85% global, Candidate Recommendation
+  desde marzo 2026. ADR-001 se sostiene. Firefox en Linux y Android sigue sin WebGPU por defecto →
+  el fallback WebGL2 no es opcional a corto plazo. Detalle en process/decisions.md ADR-001.
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
@@ -45,7 +48,8 @@
   tiles, hilo principal p50 0.23 ms una vez subidas.
 
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
-- ADR-001 WebGPU como motor principal, WGSL a mano
+- ADR-001 WebGPU como motor principal, WGSL a mano (revalidado en S0-01: ~82–85% soporte global;
+  Firefox en Linux/Android sigue sin default → WebGL2 de fallback sigue siendo obligatorio)
 - ADR-002 React 19 + Tailwind v4 (no Svelte, aunque Graphite lo use)
 - ADR-004 TypeScript primero; Rust/WASM solo en hot paths medidos (desde Fase 4)
 - ADR-006 Capas en tiles 256×256, RGBA16F lineal
@@ -70,8 +74,7 @@
    los mipmaps (sin ellos el zoom alejado aliasea y cuesta de más); si pasa en S0-09 con las tiles ya
    residentes, el sospechoso es el loop de 20 capas en el fragment shader (probar con menos capas
    vía `?layers=N` para aislar el costo).
-2. Verificar soporte actual de WebGPU por navegador (caniuse) y actualizar ADR-001 (S0-01).
-3. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
+2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-4. PWA base + deploy a GitHub Pages (S0-06).
-5. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+3. PWA base + deploy a GitHub Pages (S0-06).
+4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).

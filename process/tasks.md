@@ -21,7 +21,7 @@ E12 UX transversal (palette, HUD, contextual, i18n, a11y) · E13 Rendimiento · 
 Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | ID | Tarea | Estado |
 |---|---|---|
-| S0-01 | Verificar soporte WebGPU por navegador (caniuse) y actualizar ADR-001 | ⬜ |
+| S0-01 | Verificar soporte WebGPU por navegador (caniuse) y actualizar ADR-001 | ✅ |
 | S0-02 | Monorepo pnpm: apps/web + packages (core, engine, ui-kit, io, ai, workers, bench) | ✅ |
 | S0-03 | TS strict, Biome (lint+format), path aliases, `pnpm check` | ✅ |
 | S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ✅ |
@@ -63,6 +63,14 @@ Falta, igual que en S0-08, **medir en la máquina de referencia**: SwiftShader e
 `copyExternalImageToTexture` (~40 ms/copia medidos) que no sirve para juzgar el costo real de blending
 en régimen estable — solo se pudo verificar correctamente a escala reducida (`?layers=4&width=768`):
 compone sin costuras entre tiles, hilo principal p50 0.23 ms una vez las tiles ya están subidas.
+
+**S0-01 — resultado (2026-09-20)**: soporte confirmado, ADR-001 se sostiene sin cambios de fondo.
+WebGPU llegó a Candidate Recommendation en marzo 2026, ~82–85% de cobertura global (caniuse).
+Chrome/Edge por defecto desde 2023 (v113); Safari por defecto desde Safari 26 (fines de 2025);
+Firefox por defecto en Windows (v141) y macOS Apple Silicon (v145), pero **Linux y Android todavía
+no** (sin fecha exacta para 2026). Detalle completo y fuentes en process/decisions.md ADR-001.
+Consecuencia práctica: el fallback WebGL2 sigue siendo obligatorio, no un "nice to have" a futuro
+cercano — mientras Firefox/Linux no tenga WebGPU por defecto, esos usuarios dependen de él.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·
