@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo creado, S0-02 a S0-05 cerradas)
+> Última actualización: 2026-09-20 (sesión 2: monorepo + spike WebGPU construido)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -21,6 +21,12 @@
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
+- [ ] **S0-08 Spike WebGPU**: construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
+  Motor mínimo en `packages/engine`: `createGpuContext`, `TextureQuadRenderer` (quad.wgsl),
+  `viewport.ts` (fit/zoom-bajo-el-cursor/pan, con tests) y `FrameTimer` (p50/p95/max).
+  **Pendiente: correrlo en la máquina de referencia** — el contenedor no tiene GPU. El camino completo
+  se validó sobre SwiftShader (CPU): p50 16.66 ms, hilo principal p95 0.82 ms. Ese número NO decide ADR-001.
+  Para medir: abrir `/spike.html` y pulsar el botón, o `await window.runSpikeSweep()` en la consola.
 
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano
@@ -43,7 +49,10 @@
 
 ## 📌 Próximos pasos (próxima sesión)
 0. Re-confirmar modelos de IA (BiRefNet vs BEN v2, MobileSAM2) recién al llegar al sprint de IA, no antes.
-1. Verificar soporte actual de WebGPU por navegador (caniuse) y actualizar ADR-001 si cambia algo (S0-01).
-2. Spike técnico WebGPU: textura 4K, zoom/pan a 60 fps (S0-08) — es el riesgo mayor del sprint.
-3. PWA base + deploy a GitHub Pages (S0-06).
-4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+1. **Correr el sweep de S0-08 en la máquina de referencia** y anotar aquí el resultado; recién entonces
+   confirmar o revisar ADR-001. Si el p95 pasa de 16 ms, el siguiente sospechoso son los mipmaps
+   (el spike samplea sin ellos, así que el zoom alejado aliasea y cuesta de más).
+2. Verificar soporte actual de WebGPU por navegador (caniuse) y actualizar ADR-001 (S0-01).
+3. Spike S0-09: 20 capas tileadas con blend Normal/Multiply en WGSL.
+4. PWA base + deploy a GitHub Pages (S0-06).
+5. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).

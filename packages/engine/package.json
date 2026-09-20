@@ -8,5 +8,11 @@
   },
   "scripts": {
     "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@stratum/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@webgpu/types": "catalog:"
   }
 }

@@ -124,7 +124,15 @@ importers:
 
   packages/core: {}
 
-  packages/engine: {}
+  packages/engine:
+    dependencies:
+      '@stratum/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@webgpu/types':
+        specifier: 'catalog:'
+        version: 0.1.74
 
   packages/io: {}
 

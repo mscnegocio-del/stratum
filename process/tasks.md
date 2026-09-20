@@ -28,13 +28,21 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ✅ |
 | S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ⬜ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
-| S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | ⬜ |
+| S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | 🔄 |
 | S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | ⬜ |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
 | S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ⬜ |
 | S0-12 | README con posicionamiento, capturas del diseño, roadmap | ⬜ |
 | S0-13 | Nombre definitivo: Stratum (verificado 2026-09-20) | ✅ |
 DoD Sprint 0: spike a 60 fps medido, CI verde, diseño aprobado, deploy funcionando.
+
+**S0-08 — estado**: el spike está construido y corre (`pnpm dev` → `/spike.html`): textura 4K,
+zoom/pan, HUD y sweep determinista de 600 frames (descarta 30 de warm-up) que reporta p50/p95/max
+de frame y de hilo principal, con veredicto contra los presupuestos de performance.md.
+Falta **la medición en la máquina de referencia**: el contenedor de desarrollo no tiene GPU, así que
+solo se validó el camino completo (adaptador, subida de textura 4K, WGSL, render) sobre SwiftShader
+(rasterizador por CPU): p50 16.66 ms / 60 fps, hilo principal p95 0.82 ms, p95 de frame 33.3 ms.
+Ese p95 es de CPU y **no sirve para aceptar o descartar ADR-001** — repetir en laptop con GPU real.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·

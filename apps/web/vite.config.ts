@@ -6,6 +6,15 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
+  build: {
+    rollupOptions: {
+      input: {
+        index: fileURLToPath(new URL('./index.html', import.meta.url)),
+        // Spike de S0-08; sale del build cuando el motor real lo reemplace.
+        spike: fileURLToPath(new URL('./spike.html', import.meta.url)),
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
