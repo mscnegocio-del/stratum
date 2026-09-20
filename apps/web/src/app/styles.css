@@ -1,0 +1,4 @@
+@import "tailwindcss";
+/* Los tokens se importan aqui (y no desde main.tsx) para que Tailwind
+   procese su bloque @theme y genere las utilidades correspondientes. */
+@import "@stratum/ui-kit/tokens.css";

@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/engine" },
+    { "path": "./packages/ui-kit" },
+    { "path": "./packages/io" },
+    { "path": "./packages/ai" },
+    { "path": "./packages/workers" },
+    { "path": "./packages/bench" },
+    { "path": "./apps/web" }
+  ]
+}

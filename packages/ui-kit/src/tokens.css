@@ -1,0 +1,8 @@
+/*
+ * Tokens del design system — unica fuente de color/espaciado/tipografia.
+ * Regla: los componentes nunca usan hex sueltos, solo estas variables.
+ * El set completo se define en S0-11 a partir de process/design-system.md.
+ */
+@theme {
+  --color-canvas-backdrop: oklch(0.21 0 0);
+}

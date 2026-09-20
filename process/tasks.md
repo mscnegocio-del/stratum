@@ -22,10 +22,10 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | ID | Tarea | Estado |
 |---|---|---|
 | S0-01 | Verificar soporte WebGPU por navegador (caniuse) y actualizar ADR-001 | ⬜ |
-| S0-02 | Monorepo pnpm: apps/web + packages (core, engine, ui-kit, io, ai, workers, bench) | ⬜ |
-| S0-03 | TS strict, Biome (lint+format), path aliases, `pnpm check` | ⬜ |
-| S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ⬜ |
-| S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ⬜ |
+| S0-02 | Monorepo pnpm: apps/web + packages (core, engine, ui-kit, io, ai, workers, bench) | ✅ |
+| S0-03 | TS strict, Biome (lint+format), path aliases, `pnpm check` | ✅ |
+| S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ✅ |
+| S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ✅ |
 | S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ⬜ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | ⬜ |

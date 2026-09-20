@@ -1,0 +1,31 @@
+{
+  "name": "@stratum/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@stratum/core": "workspace:*",
+    "@stratum/engine": "workspace:*",
+    "@stratum/io": "workspace:*",
+    "@stratum/ui-kit": "workspace:*",
+    "@stratum/workers": "workspace:*",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "catalog:",
+    "@types/node": "^26.6.2",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "tailwindcss": "catalog:",
+    "vite": "catalog:"
+  }
+}

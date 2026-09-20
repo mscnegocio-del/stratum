@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["vite/client", "@webgpu/types"],
+    "jsx": "react-jsx",
+    "outDir": "dist-types",
+    "rootDir": ".",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "."
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/engine" },
+    { "path": "../../packages/io" },
+    { "path": "../../packages/ui-kit" },
+    { "path": "../../packages/workers" }
+  ]
+}

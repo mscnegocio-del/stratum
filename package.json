@@ -1,0 +1,36 @@
+{
+  "name": "stratum-editor",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Editor de imagenes raster open source, 100% en el navegador, con IA local",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @stratum/web dev",
+    "build": "pnpm --filter @stratum/web build",
+    "preview": "pnpm --filter @stratum/web preview",
+    "check": "biome check . && tsc --build",
+    "check:fix": "biome check --write .",
+    "typecheck": "tsc --build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "bench": "vitest bench --run"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "@playwright/test": "catalog:",
+    "@webgpu/types": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
