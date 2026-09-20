@@ -19,3 +19,4 @@ catalog:
   '@playwright/test': ^1.63.0
   '@biomejs/biome': ^2.5.14
   '@webgpu/types': ^0.1.74
+  'vite-plugin-pwa': ^1.3.0

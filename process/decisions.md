@@ -72,6 +72,13 @@ Regla: detección previa; si no está disponible, la función no aparece. Estado
 React 19.3 · Vite 8.x · Tailwind 4.3 · Zustand 5 · Motion 13 · cmdk 1.1 · ONNX Runtime Web 1.30 (verificado 2026-09-20).
 Razón: evitar que el proyecto nazca con dependencias atrasadas. Regla: re-verificar versiones cada 3 meses y al inicio de cada fase. Estado: vigente.
 
+**ADR-017 | 2026-09-20 | vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano**
+Descartadas: service worker manual (fácil de romper el versionado de caché y dejar assets viejos
+servidos), Workbox sin el plugin de Vite (duplica el manifiesto de build que Vite ya conoce).
+Razón: Workbox es el estándar de facto para cache-busting correcto de un build versionado; el
+plugin lo integra con el pipeline de Vite en vez de mantenerlo a mano. Licencia MIT, v1.3.0
+(verificado 2026-09-20). Estado: vigente.
+
 <!-- Plantilla:
 **ADR-0XX | AAAA-MM-DD | Decisión**
 Descartadas: … Razón: … Estado: propuesta | vigente | reemplazada por ADR-0YY

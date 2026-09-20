@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo, spikes S0-08/S0-09 y revalidación S0-01)
+> Última actualización: 2026-09-20 (sesión 2: monorepo, spikes S0-08/S0-09, revalidación S0-01, PWA S0-06)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -46,6 +46,14 @@
   `copyExternalImageToTexture` (~40 ms/copia) como para juzgar el costo de blending en régimen
   estable — solo se validó a escala reducida (`?layers=4&width=768`): compone sin costuras entre
   tiles, hilo principal p50 0.23 ms una vez subidas.
+- [ ] **S0-06 PWA base**: construida y verificada con Playwright — service worker queda `activo` y,
+  con la red cortada, la app sigue cargando desde caché (Workbox vía `vite-plugin-pwa`, ADR-017).
+  Precache excluye a propósito las páginas de spike. Iconos son un mark provisional generado por
+  código (`apps/web/public/icons/mark.svg`), a reemplazar en S0-10/S0-12.
+  **Falta un paso manual tuyo, no lo puedo hacer por API**: activar GitHub Pages en
+  Settings → Pages → Source: "GitHub Actions". El workflow `.github/workflows/deploy.yml` ya está
+  y dispara en push a `main` (o manual), pero fallará hasta que actives Pages y hasta el primer
+  merge a `main`.
 
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano (revalidado en S0-01: ~82–85% soporte global;
@@ -56,11 +64,15 @@
 - ADR-007 Undo por snapshots diferenciales de tiles (no CRDT)
 - ADR-014 IA de asistencia, no generativa: si necesita servidor, está fuera de alcance
 - ADR-016 Versiones fijadas; re-verificar cada 3 meses
+- ADR-017 vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano
 
 ## 🔴 Bloqueantes
 - Ninguno
 
 ## ❓ Pendiente de confirmar con el autor
+- **Acción tuya, no automatizable**: activar GitHub Pages en Settings → Pages → Source:
+  "GitHub Actions" del repo `mscnegocio-del/stratum`. Sin esto, `.github/workflows/deploy.yml`
+  fallará aunque el resto de S0-06 esté listo.
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
 - **TypeScript 7.0 ya está publicado** (port nativo a Go, compilación mucho más rápida). El monorepo
   quedó en 5.9.3 por prudencia; migrar merece su propio ADR y una rama aparte.
@@ -76,5 +88,6 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. PWA base + deploy a GitHub Pages (S0-06).
+3. Activar GitHub Pages (ver "Pendiente de confirmar con el autor") y mergear a `main` para
+   verificar el primer deploy real de S0-06.
 4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
