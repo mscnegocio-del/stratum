@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo + spike WebGPU construido)
+> Última actualización: 2026-09-20 (sesión 2: monorepo + spikes WebGPU S0-08 y S0-09 construidos)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -27,6 +27,22 @@
   **Pendiente: correrlo en la máquina de referencia** — el contenedor no tiene GPU. El camino completo
   se validó sobre SwiftShader (CPU): p50 16.66 ms, hilo principal p95 0.82 ms. Ese número NO decide ADR-001.
   Para medir: abrir `/spike.html` y pulsar el botón, o `await window.runSpikeSweep()` en la consola.
+- [ ] **S0-09 Spike compositor por tiles**: construido y funcionando (`/spike-layers.html`, admite
+  `?layers=N&width=W&height=H`). Nuevo en `packages/engine`: `tile-grid.ts` (qué tiles son visibles,
+  con tests), `tile-compositor.ts` (residencia GPU solo de tiles visibles + upload progresivo),
+  `shaders/blend.wgsl` + `shaders/tile-composite.wgsl` (Normal/Multiply, hasta 20 capas por tile).
+  **Dos bugs reales encontrados corriéndolo** (no solo leyendo el código):
+  1. `copyExternalImageToTexture` exige `RENDER_ATTACHMENT` en la textura destino además de
+     `COPY_DST` — sin eso todas las copias fallaban en silencio (solo warning en consola) y el
+     canvas quedaba negro. Corregido en `tile-compositor.ts`.
+  2. Subir todas las tiles nuevas de golpe en un frame (135 tiles × 20 capas tras "ajustar a
+     pantalla") bloqueaba la página varios minutos en SwiftShader. Mitigado con
+     `UPLOAD_BUDGET_PER_FRAME = 4`: el resto rellena en frames siguientes. **Esta idea de carga
+     progresiva de tiles debería pasar al diseño real de la LRU de S1-03**, no quedar solo en el spike.
+  **Pendiente: medir en la máquina de referencia.** SwiftShader es demasiado lento para
+  `copyExternalImageToTexture` (~40 ms/copia) como para juzgar el costo de blending en régimen
+  estable — solo se validó a escala reducida (`?layers=4&width=768`): compone sin costuras entre
+  tiles, hilo principal p50 0.23 ms una vez subidas.
 
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano
@@ -49,10 +65,13 @@
 
 ## 📌 Próximos pasos (próxima sesión)
 0. Re-confirmar modelos de IA (BiRefNet vs BEN v2, MobileSAM2) recién al llegar al sprint de IA, no antes.
-1. **Correr el sweep de S0-08 en la máquina de referencia** y anotar aquí el resultado; recién entonces
-   confirmar o revisar ADR-001. Si el p95 pasa de 16 ms, el siguiente sospechoso son los mipmaps
-   (el spike samplea sin ellos, así que el zoom alejado aliasea y cuesta de más).
+1. **Correr los sweeps de S0-08 y S0-09 en la máquina de referencia** y anotar aquí el resultado;
+   recién entonces confirmar o revisar ADR-001. Si el p95 pasa de 16 ms en S0-08, el sospechoso son
+   los mipmaps (sin ellos el zoom alejado aliasea y cuesta de más); si pasa en S0-09 con las tiles ya
+   residentes, el sospechoso es el loop de 20 capas en el fragment shader (probar con menos capas
+   vía `?layers=N` para aislar el costo).
 2. Verificar soporte actual de WebGPU por navegador (caniuse) y actualizar ADR-001 (S0-01).
-3. Spike S0-09: 20 capas tileadas con blend Normal/Multiply en WGSL.
+3. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
+   la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
 4. PWA base + deploy a GitHub Pages (S0-06).
 5. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).

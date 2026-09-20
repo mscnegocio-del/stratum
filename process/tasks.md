@@ -29,7 +29,7 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ⬜ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | 🔄 |
-| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | ⬜ |
+| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | 🔄 |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
 | S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ⬜ |
 | S0-12 | README con posicionamiento, capturas del diseño, roadmap | ⬜ |
@@ -43,6 +43,26 @@ Falta **la medición en la máquina de referencia**: el contenedor de desarrollo
 solo se validó el camino completo (adaptador, subida de textura 4K, WGSL, render) sobre SwiftShader
 (rasterizador por CPU): p50 16.66 ms / 60 fps, hilo principal p95 0.82 ms, p95 de frame 33.3 ms.
 Ese p95 es de CPU y **no sirve para aceptar o descartar ADR-001** — repetir en laptop con GPU real.
+
+**S0-09 — estado**: compositor por tiles construido y corriendo (`pnpm dev` → `/spike-layers.html`):
+solo las tiles visibles (+margen) residen en GPU (architecture.md §4), un `texture_2d_array` por
+tile con las 20 capas, y un fragment shader WGSL que recorre las capas mezclando Normal/Multiply
+(`packages/engine/src/shaders/blend.wgsl` + `tile-composite.wgsl`). Acepta `?layers=N&width=W&height=H`
+para probar a menor escala.
+Dos hallazgos reales de este spike (no hipotéticos, encontrados corriéndolo):
+1. **Bug de spec**: `copyExternalImageToTexture` exige que la textura destino tenga
+   `RENDER_ATTACHMENT` además de `COPY_DST` (se implementa como blit interno) — sin eso, todas las
+   copias fallaban en silencio (solo un warning en consola) y el canvas quedaba en negro. Corregido.
+2. **Riesgo de diseño para S1-03**: subir todas las tiles nuevas de un frame (p. ej. 135 tiles × 20
+   capas tras un "ajustar a pantalla") revienta el frame — se midieron minutos en SwiftShader.
+   Mitigado con un tope de tiles nuevas subidas por frame (`UPLOAD_BUDGET_PER_FRAME = 4` en
+   `tile-compositor.ts`): el resto de tiles rellenan en frames siguientes en vez de trabar la UI.
+   Esta idea (carga progresiva de tiles) debería ir al diseño real de la LRU en S1-03, no solo quedar
+   en el spike.
+Falta, igual que en S0-08, **medir en la máquina de referencia**: SwiftShader es tan lento para
+`copyExternalImageToTexture` (~40 ms/copia medidos) que no sirve para juzgar el costo real de blending
+en régimen estable — solo se pudo verificar correctamente a escala reducida (`?layers=4&width=768`):
+compone sin costuras entre tiles, hilo principal p50 0.23 ms una vez las tiles ya están subidas.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·

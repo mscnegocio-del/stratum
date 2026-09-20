@@ -10,8 +10,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: fileURLToPath(new URL('./index.html', import.meta.url)),
-        // Spike de S0-08; sale del build cuando el motor real lo reemplace.
+        // Spikes de Sprint 0; salen del build cuando el motor real los reemplaza.
         spike: fileURLToPath(new URL('./spike.html', import.meta.url)),
+        'spike-layers': fileURLToPath(new URL('./spike-layers.html', import.meta.url)),
       },
     },
   },
