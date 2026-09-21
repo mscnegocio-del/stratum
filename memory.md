@@ -75,6 +75,11 @@
 - Biome 2.5 cubre lint + format (reemplaza ESLint + Prettier); si se prefiere el par clásico, decidirlo
   antes de escribir más código.
 
+## ✅ Completado (sesión 3, 2026-09-21 cont.)
+- [x] Definido presupuesto preliminar de VRAM en process/performance.md (2 GB mínimo / 4 GB+
+  recomendado, estimado a partir de tiles 256×256 RGBA16F de ADR-006). **Sin medir aún** — queda
+  atado al mismo pendiente de correr los sweeps de S0-08/S0-09 en máquina con GPU real.
+
 ## 📌 Próximos pasos (próxima sesión)
 0. Re-confirmar modelos de IA (BiRefNet vs BEN v2, MobileSAM2) recién al llegar al sprint de IA, no antes.
 1. **Correr los sweeps de S0-08 y S0-09 en la máquina de referencia** y anotar aquí el resultado;
