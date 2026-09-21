@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-21 (sesión 2: S0-06 cerrado — repo público, Pages activo, deploy real verificado)
+> Última actualización: 2026-09-21 (sesión 2, cierre: S0-06 cerrado y confirmado visualmente en producción)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -27,8 +27,8 @@
   Source: GitHub Actions) — ambos confirmados por API (`visibility: public`, `has_pages: true`).
   Deploy real disparado y **exitoso**: build + deploy en verde
   (https://github.com/mscnegocio-del/stratum/actions/runs/35549589177). Sitio publicado en
-  **https://mscnegocio-del.github.io/stratum/** (confirmar visualmente: el proxy de este entorno
-  bloquea `github.io`, no se pudo cargar desde aquí).
+  **https://mscnegocio-del.github.io/stratum/** — **confirmado visualmente por el autor desde
+  móvil**: carga "Stratum", el subtítulo y "WebGPU disponible". S0-06 cerrado end-to-end.
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
@@ -84,7 +84,10 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. Confirmar visualmente que https://mscnegocio-del.github.io/stratum/ carga bien (este entorno no
-   puede probar dominios github.io).
-4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
-5. S0-07: estudiar Graphite (dispatcher, brush GPU, persistence) — sigue pendiente, no se tocó hoy.
+3. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+4. S0-07: estudiar Graphite (dispatcher, brush GPU, persistence) — sigue pendiente, no se tocó hoy.
+
+## 🏁 Cierre de sesión 2 (2026-09-21)
+Sprint 0 cerrado: S0-01, S0-02, S0-03, S0-04, S0-05, S0-06, S0-13. Quedan abiertos S0-07, S0-10,
+S0-11, S0-12, y S0-08/S0-09 construidos pero sin medir en máquina con GPU real. Repo público, CI y
+deploy funcionando en GitHub Actions, sitio en producción confirmado visualmente. Sin bloqueantes.

@@ -90,9 +90,9 @@ disponibles en esta sesión)**:
 **Cerrado (2026-09-21)**: ambos pasos hechos, confirmado por API (`visibility: public`,
 `has_pages: true`). Deploy re-disparado manualmente
 (https://github.com/mscnegocio-del/stratum/actions/runs/35549589177) — ambos jobs (`build`,
-`deploy`) en `success`. Sitio publicado en **https://mscnegocio-del.github.io/stratum/**
-(no se pudo cargar desde este entorno para una captura porque el proxy bloquea dominios
-`github.io`; confirmar visualmente en el navegador). DoD de Sprint 0 para S0-06 cumplido.
+`deploy`) en `success`. Sitio publicado en **https://mscnegocio-del.github.io/stratum/** —
+**confirmado visualmente por el autor** (captura desde móvil, 2026-09-21): carga "Stratum", el
+subtítulo y "WebGPU disponible". S0-06 cerrado end-to-end.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·
