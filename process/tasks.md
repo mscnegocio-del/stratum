@@ -78,10 +78,17 @@ red cortada (`context.setOffline(true)`) la app sigue cargando desde caché. Pre
 propósito `spike.html`/`spike-layers.html` (no son parte de la app real). Iconos son un mark
 provisional generado por código (`apps/web/public/icons/mark.svg` + PNGs derivados) — reemplazar en
 S0-10/S0-12 cuando exista diseño real.
-Workflow `.github/workflows/deploy.yml` creado (build → `actions/deploy-pages`), dispara en push a
-`main` o manualmente. **Falta un paso manual de una sola vez que no puedo hacer por API**: activar
-GitHub Pages en Settings → Pages → Source: "GitHub Actions" del repo. Sin eso el deploy fallará
-aunque el workflow esté bien. Falta también el primer merge a `main` para que se dispare.
+Rama `main` creada (2026-09-21) y CI corrió en GitHub Actions real sobre ella: **verde**
+(https://github.com/mscnegocio-del/stratum/actions/runs/35549121177). El workflow Deploy también
+disparó y **falló**, como se esperaba: GitHub Pages con repos privados requiere plan pago
+(Pro/Team/Enterprise) — con el repo privado, Settings → Pages ni siquiera muestra el selector de
+"Source", solo la sección de dominio. El autor decidió hacer el repo público para resolverlo.
+**Dos pasos manuales tuyos, no puedo hacerlos yo (ni por git ni con las herramientas de GitHub
+disponibles en esta sesión)**:
+1. Settings → General → Danger Zone → Change repository visibility → **Public**.
+2. Recién entonces: Settings → Pages → Source: **"GitHub Actions"**.
+Después de eso, re-disparar el workflow Deploy (push a `main` o manualmente desde la pestaña
+Actions) para confirmar el primer deploy real.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·

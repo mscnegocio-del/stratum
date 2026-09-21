@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo, spikes S0-08/S0-09, revalidación S0-01, PWA S0-06)
+> Última actualización: 2026-09-21 (sesión 2: rama main creada, CI verde en GitHub Actions, deploy pendiente de Pages)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -50,10 +50,15 @@
   con la red cortada, la app sigue cargando desde caché (Workbox vía `vite-plugin-pwa`, ADR-017).
   Precache excluye a propósito las páginas de spike. Iconos son un mark provisional generado por
   código (`apps/web/public/icons/mark.svg`), a reemplazar en S0-10/S0-12.
-  **Falta un paso manual tuyo, no lo puedo hacer por API**: activar GitHub Pages en
-  Settings → Pages → Source: "GitHub Actions". El workflow `.github/workflows/deploy.yml` ya está
-  y dispara en push a `main` (o manual), pero fallará hasta que actives Pages y hasta el primer
-  merge a `main`.
+  Rama `main` creada (2026-09-21); CI corrió en GitHub Actions real y quedó **verde**
+  (run https://github.com/mscnegocio-del/stratum/actions/runs/35549121177). Deploy disparó y
+  **falló**: GitHub Pages con repos privados exige plan pago — Settings → Pages en un repo privado
+  no muestra el selector de "Source", solo la sección de dominio. Decidiste hacer el repo público.
+  **Dos pasos manuales tuyos, no puedo hacerlos** (ni con git ni con las herramientas de GitHub de
+  esta sesión — no hay una para cambiar visibilidad del repo):
+  1. Settings → General → Danger Zone → Change repository visibility → Public.
+  2. Luego: Settings → Pages → Source: "GitHub Actions".
+  Después, re-disparar el workflow Deploy (push a main o "Run workflow" manual) para confirmarlo.
 
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano (revalidado en S0-01: ~82–85% soporte global;
@@ -70,9 +75,9 @@
 - Ninguno
 
 ## ❓ Pendiente de confirmar con el autor
-- **Acción tuya, no automatizable**: activar GitHub Pages en Settings → Pages → Source:
-  "GitHub Actions" del repo `mscnegocio-del/stratum`. Sin esto, `.github/workflows/deploy.yml`
-  fallará aunque el resto de S0-06 esté listo.
+- **Acción tuya, no automatizable (2 pasos)**: 1) hacer público el repo `mscnegocio-del/stratum`
+  (Settings → General → Danger Zone → Change visibility) — decidido, falta ejecutarlo; 2) recién
+  entonces, activar GitHub Pages en Settings → Pages → Source: "GitHub Actions".
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
 - **TypeScript 7.0 ya está publicado** (port nativo a Go, compilación mucho más rápida). El monorepo
   quedó en 5.9.3 por prudencia; migrar merece su propio ADR y una rama aparte.
@@ -88,6 +93,6 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. Activar GitHub Pages (ver "Pendiente de confirmar con el autor") y mergear a `main` para
-   verificar el primer deploy real de S0-06.
+3. Verificar que hiciste público el repo y activado GitHub Pages (ver "Pendiente de confirmar con
+   el autor"); re-disparar el workflow Deploy para confirmar el primer deploy real de S0-06.
 4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
