@@ -13,6 +13,15 @@
 | Bundle JS inicial (gzip) | < 350 KB | 500 KB |
 | Memoria con doc 24 MP + 30 capas | < 2.5 GB | 3.5 GB |
 | Undo/redo | < 50 ms | 100 ms |
+| VRAM mínima soportada (GPU integrada) | 2 GB | — degradar a resolución de tile menor / menos capas residentes |
+| VRAM recomendada | 4 GB+ | — |
+
+**Nota (sin medir aún):** estimación basada en tiles 256×256 RGBA16F (512 KB/tile, ADR-006). Con
+~180 tiles visibles × hasta 20 capas por tile (rango probado en spike S0-09), el peor caso sin LRU
+ronda ~1.8 GB de VRAM. La LRU con presupuesto de VRAM prevista para S1-03 debe acotar esto por
+debajo del piso de 2 GB en GPUs integradas modestas. **Pendiente: medir consumo real de VRAM en la
+máquina de referencia durante los sweeps de S0-08/S0-09** (ver memory.md → próximos pasos) y
+confirmar o ajustar esta fila con datos reales, no estimados.
 
 ## Técnicas obligatorias
 - Tiles + dirty rects: recomponer solo lo que cambió y es visible.
