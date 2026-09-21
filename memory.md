@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-21 (sesión 2: rama main creada, CI verde en GitHub Actions, deploy pendiente de Pages)
+> Última actualización: 2026-09-21 (sesión 2: S0-06 cerrado — repo público, Pages activo, deploy real verificado)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -21,6 +21,14 @@
 - [x] S0-01 Soporte de WebGPU revalidado (caniuse + gpuweb): ~82–85% global, Candidate Recommendation
   desde marzo 2026. ADR-001 se sostiene. Firefox en Linux y Android sigue sin WebGPU por defecto →
   el fallback WebGL2 no es opcional a corto plazo. Detalle en process/decisions.md ADR-001.
+- [x] **S0-06 PWA base + deploy a GitHub Pages.** Manifiesto + service worker offline con
+  `vite-plugin-pwa`/Workbox (ADR-017), verificado con Playwright (SW `activo`, la app sigue
+  cargando con la red cortada). Repo pasado a público y GitHub Pages activado (Settings → Pages →
+  Source: GitHub Actions) — ambos confirmados por API (`visibility: public`, `has_pages: true`).
+  Deploy real disparado y **exitoso**: build + deploy en verde
+  (https://github.com/mscnegocio-del/stratum/actions/runs/35549589177). Sitio publicado en
+  **https://mscnegocio-del.github.io/stratum/** (confirmar visualmente: el proxy de este entorno
+  bloquea `github.io`, no se pudo cargar desde aquí).
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
@@ -46,20 +54,6 @@
   `copyExternalImageToTexture` (~40 ms/copia) como para juzgar el costo de blending en régimen
   estable — solo se validó a escala reducida (`?layers=4&width=768`): compone sin costuras entre
   tiles, hilo principal p50 0.23 ms una vez subidas.
-- [ ] **S0-06 PWA base**: construida y verificada con Playwright — service worker queda `activo` y,
-  con la red cortada, la app sigue cargando desde caché (Workbox vía `vite-plugin-pwa`, ADR-017).
-  Precache excluye a propósito las páginas de spike. Iconos son un mark provisional generado por
-  código (`apps/web/public/icons/mark.svg`), a reemplazar en S0-10/S0-12.
-  Rama `main` creada (2026-09-21); CI corrió en GitHub Actions real y quedó **verde**
-  (run https://github.com/mscnegocio-del/stratum/actions/runs/35549121177). Deploy disparó y
-  **falló**: GitHub Pages con repos privados exige plan pago — Settings → Pages en un repo privado
-  no muestra el selector de "Source", solo la sección de dominio. Decidiste hacer el repo público.
-  **Dos pasos manuales tuyos, no puedo hacerlos** (ni con git ni con las herramientas de GitHub de
-  esta sesión — no hay una para cambiar visibilidad del repo):
-  1. Settings → General → Danger Zone → Change repository visibility → Public.
-  2. Luego: Settings → Pages → Source: "GitHub Actions".
-  Después, re-disparar el workflow Deploy (push a main o "Run workflow" manual) para confirmarlo.
-
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano (revalidado en S0-01: ~82–85% soporte global;
   Firefox en Linux/Android sigue sin default → WebGL2 de fallback sigue siendo obligatorio)
@@ -75,9 +69,6 @@
 - Ninguno
 
 ## ❓ Pendiente de confirmar con el autor
-- **Acción tuya, no automatizable (2 pasos)**: 1) hacer público el repo `mscnegocio-del/stratum`
-  (Settings → General → Danger Zone → Change visibility) — decidido, falta ejecutarlo; 2) recién
-  entonces, activar GitHub Pages en Settings → Pages → Source: "GitHub Actions".
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
 - **TypeScript 7.0 ya está publicado** (port nativo a Go, compilación mucho más rápida). El monorepo
   quedó en 5.9.3 por prudencia; migrar merece su propio ADR y una rama aparte.
@@ -93,6 +84,7 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. Verificar que hiciste público el repo y activado GitHub Pages (ver "Pendiente de confirmar con
-   el autor"); re-disparar el workflow Deploy para confirmar el primer deploy real de S0-06.
+3. Confirmar visualmente que https://mscnegocio-del.github.io/stratum/ carga bien (este entorno no
+   puede probar dominios github.io).
 4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+5. S0-07: estudiar Graphite (dispatcher, brush GPU, persistence) — sigue pendiente, no se tocó hoy.

@@ -26,7 +26,7 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-03 | TS strict, Biome (lint+format), path aliases, `pnpm check` | ✅ |
 | S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ✅ |
 | S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ✅ |
-| S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | 🔄 |
+| S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ✅ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | 🔄 |
 | S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | 🔄 |
@@ -87,8 +87,12 @@ disparó y **falló**, como se esperaba: GitHub Pages con repos privados requier
 disponibles en esta sesión)**:
 1. Settings → General → Danger Zone → Change repository visibility → **Public**.
 2. Recién entonces: Settings → Pages → Source: **"GitHub Actions"**.
-Después de eso, re-disparar el workflow Deploy (push a `main` o manualmente desde la pestaña
-Actions) para confirmar el primer deploy real.
+**Cerrado (2026-09-21)**: ambos pasos hechos, confirmado por API (`visibility: public`,
+`has_pages: true`). Deploy re-disparado manualmente
+(https://github.com/mscnegocio-del/stratum/actions/runs/35549589177) — ambos jobs (`build`,
+`deploy`) en `success`. Sitio publicado en **https://mscnegocio-del.github.io/stratum/**
+(no se pudo cargar desde este entorno para una captura porque el proxy bloquea dominios
+`github.io`; confirmar visualmente en el navegador). DoD de Sprint 0 para S0-06 cumplido.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·
