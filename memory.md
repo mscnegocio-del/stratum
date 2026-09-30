@@ -66,7 +66,8 @@
 - ADR-017 vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano
 
 ## 🔴 Bloqueantes
-- Ninguno
+- S0-10 (diseño) en pausa: el autor eligió claude.ai/design vía `/design-sync`, pero ese skill no
+  está habilitado en la sesión → hasta que el autor lo habilite en su cuenta.
 
 ## ❓ Pendiente de confirmar con el autor
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
@@ -74,11 +75,18 @@
   quedó en 5.9.3 por prudencia; migrar merece su propio ADR y una rama aparte.
 - Biome 2.5 cubre lint + format (reemplaza ESLint + Prettier); si se prefiere el par clásico, decidirlo
   antes de escribir más código.
+- **ADR-018 (propuesta)**: escrituras a OPFS desde un worker de I/O con `createSyncAccessHandle`.
+- **ADR-019 (propuesta)**: `.stratum` como carpeta de trabajo en OPFS y ZIP solo al exportar; cambia
+  process/document-model.md §Formato → no tocar ese archivo hasta que el autor lo confirme.
 
 ## ✅ Completado (sesión 3, 2026-09-21 cont.)
 - [x] Definido presupuesto preliminar de VRAM en process/performance.md (2 GB mínimo / 4 GB+
   recomendado, estimado a partir de tiles 256×256 RGBA16F de ADR-006). **Sin medir aún** — queda
   atado al mismo pendiente de correr los sweeps de S0-08/S0-09 en máquina con GPU real.
+- [x] **S0-07 Estudio de Graphite** (commit 68c3c75, 2026-09-28) → process/graphite-reference.md §1–§5:
+  dispatcher, atajos, pincel GPU, persistencia/formato, caché de render. Hallazgos que mueven el diseño:
+  pincel por integración analítica de segmentos (base para S3-01), Graphite pasó a OPFS + formato
+  `.gdd` con journal, y caché de render con presupuesto fijo de 512 MB + LRU (valida S1-03).
 
 ## 📌 Próximos pasos (próxima sesión)
 0. Re-confirmar modelos de IA (BiRefNet vs BEN v2, MobileSAM2) recién al llegar al sprint de IA, no antes.
@@ -89,8 +97,8 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
-4. S0-07: estudiar Graphite (dispatcher, brush GPU, persistence) — sigue pendiente, no se tocó hoy.
+3. S0-10 con claude.ai/design cuando el autor habilite `/design-sync`; luego ui-kit + Kitchen Sink (S0-11).
+4. Confirmar o descartar ADR-018 y ADR-019 con el autor.
 
 ## 🏁 Cierre de sesión 2 (2026-09-21)
 Sprint 0 cerrado: S0-01, S0-02, S0-03, S0-04, S0-05, S0-06, S0-13. Quedan abiertos S0-07, S0-10,

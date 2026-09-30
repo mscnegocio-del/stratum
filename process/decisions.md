@@ -40,7 +40,8 @@ Descartadas: imagen completa por capa (RAM), 8 bits sRGB (banding, blend incorre
 Descartadas: snapshots completos (Graphite legacy), CRDT (Graphite nuevo; innecesario sin colaboración). Razón: simple y eficiente. Estado: vigente.
 
 **ADR-008 | 2026-09-20 | Persistencia en OPFS (no IndexedDB para binarios)**
-Descartadas: IndexedDB (usado por Graphite), localStorage. Razón: mejor rendimiento para archivos grandes y acceso desde workers. Estado: vigente.
+Descartadas: IndexedDB, localStorage. Razón: mejor rendimiento para archivos grandes y acceso desde workers. Estado: vigente.
+Nota (S0-07, 2026-09-30): Graphite, que usaba IndexedDB, migró sus documentos a OPFS y deja IndexedDB solo para estado chico → refuerza esta decisión. Detalle de escritura en ADR-018.
 
 **ADR-009 | 2026-09-20 | IA local con ONNX Runtime Web; solo modelos con licencia compatible con MIT**
 Descartadas: APIs en la nube, modelos no comerciales (p. ej. RMBG). Razón: privacidad (pilar #4) y licencia. Estado: vigente.
@@ -78,6 +79,26 @@ servidos), Workbox sin el plugin de Vite (duplica el manifiesto de build que Vit
 Razón: Workbox es el estándar de facto para cache-busting correcto de un build versionado; el
 plugin lo integra con el pipeline de Vite en vez de mantenerlo a mano. Licencia MIT, v1.3.0
 (verificado 2026-09-20). Estado: vigente.
+
+**ADR-018 | 2026-09-30 | Escritura a OPFS desde un worker de I/O con `createSyncAccessHandle`**
+Todas las escrituras de documento, autoguardado y journal de undo pasan por un único worker de I/O
+con una cola FIFO (write/append/delete + barreras para lecturas consistentes), usando
+`FileSystemSyncAccessHandle` (escritura in-place con offset; solo disponible en workers dedicados).
+Descartadas: `createWritable` desde el hilo principal (lo que usa Graphite: copia el archivo completo
+en cada escritura, appends O(N²), ver graphite-reference.md §4). Razón: autoguardado frecuente sin
+tocar el hilo principal (pilar #3) y costo de append proporcional a lo escrito. Estado: propuesta
+(confirmar con el autor; se implementaría en Sprints 4–7 con autoguardado).
+
+**ADR-019 | 2026-09-30 | `.stratum` como carpeta de trabajo en OPFS; ZIP solo al exportar**
+El documento abierto vive como carpeta en OPFS que se actualiza en continuo; "Guardar como .stratum"
+empaqueta esa misma estructura en ZIP. `manifest.json` siempre JSON como archivo de arranque
+(`format`, `formatVersion`, versión del editor, tabla de codecs por payload); `session.json` aparte
+para vista, cursor de historial y pila de redo (el redo sobrevive a reabrir); journal de historial
+append-only con frames con prefijo de longitud (detecta el último frame roto tras un crash).
+Descartadas: ZIP como formato de trabajo (reescribir el ZIP entero en cada autoguardado).
+Razón: autoguardado incremental barato, recuperación ante crash, un único formato lógico. Inspirado
+en el RFC `document-format.md` de Graphite. Estado: propuesta (afecta process/document-model.md §Formato;
+confirmar con el autor antes de tocarlo).
 
 <!-- Plantilla:
 **ADR-0XX | AAAA-MM-DD | Decisión**

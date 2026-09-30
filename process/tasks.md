@@ -27,7 +27,7 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ✅ |
 | S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ✅ |
 | S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ✅ |
-| S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
+| S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ✅ |
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | 🔄 |
 | S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | 🔄 |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
@@ -63,6 +63,16 @@ Falta, igual que en S0-08, **medir en la máquina de referencia**: SwiftShader e
 `copyExternalImageToTexture` (~40 ms/copia medidos) que no sirve para juzgar el costo real de blending
 en régimen estable — solo se pudo verificar correctamente a escala reducida (`?layers=4&width=768`):
 compone sin costuras entre tiles, hilo principal p50 0.23 ms una vez las tiles ya están subidas.
+
+**S0-07 — resultado (2026-09-30)**: Graphite estudiado en el commit 68c3c75 (2026-09-28); notas
+completas en process/graphite-reference.md §1–§5. Tres cambios en Graphite desde la revisión anterior
+que afectan nuestro diseño: (1) el pincel ya no estampa dabs, integra el kernel por segmento con una
+LUT 2D (base directa para S3-01); (2) movieron los documentos de IndexedDB a OPFS con un formato nuevo
+`.gdd` (manifest + journal append-only + session aparte) → propuestas ADR-018 y ADR-019;
+(3) tienen una caché de render por tiles 256 px con presupuesto fijo de 512 MB y LRU → confirma el
+enfoque de S1-03. Salidas concretas para sprints siguientes: dispatcher en profundidad con Commands
+coalescibles (S1-02), tabla única de atajos que alimenta teclado + tooltips + Command Palette,
+tiles direccionadas por hash en el almacén de undo (dedup sobre ADR-007).
 
 **S0-01 — resultado (2026-09-20)**: soporte confirmado, ADR-001 se sostiene sin cambios de fondo.
 WebGPU llegó a Candidate Recommendation en marzo 2026, ~82–85% de cobertura global (caniuse).
