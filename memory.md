@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-21 (sesión 2, cierre: S0-06 cerrado y confirmado visualmente en producción)
+> Última actualización: 2026-10-05 (sesión 4: S0-08 y S0-09 medidos en GPU real, ADR-001 confirmado)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -80,9 +80,7 @@
 - ADR-017 vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano
 
 ## 🔴 Bloqueantes
-- S0-09 no se pudo medir en producción: el service worker servía index.html en vez de
-  /stratum/spike-layers.html (denylist con `^` no casaba con el subpath de Pages). Corregido en
-  rama `fix/pwa-spike-denylist` (pendiente de PR/merge). Se midió igual con `?layers=N`.
+- Ninguno (bug del SW con spikes bajo /stratum/ corregido en fix/pwa-spike-denylist)
 
 ## ❓ Pendiente de confirmar con el autor
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
