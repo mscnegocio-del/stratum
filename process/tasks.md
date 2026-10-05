@@ -31,7 +31,7 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | ✅ |
 | S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | ✅ (ver memory.md: presupuesto de subida en capas-tile) |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
-| S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ⬜ |
+| S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ✅ (tokens provisionales hasta S0-10) |
 | S0-12 | README con posicionamiento, capturas del diseño, roadmap | ⬜ |
 | S0-13 | Nombre definitivo: Stratum (verificado 2026-09-20) | ✅ |
 DoD Sprint 0: spike a 60 fps medido, CI verde, diseño aprobado, deploy funcionando.
@@ -63,6 +63,18 @@ Falta, igual que en S0-08, **medir en la máquina de referencia**: SwiftShader e
 `copyExternalImageToTexture` (~40 ms/copia medidos) que no sirve para juzgar el costo real de blending
 en régimen estable — solo se pudo verificar correctamente a escala reducida (`?layers=4&width=768`):
 compone sin costuras entre tiles, hilo principal p50 0.23 ms una vez las tiles ya están subidas.
+
+**S0-11 — resultado (2026-10-05)**: tokens completos (color en tema oscuro y claro, tipografía,
+radios, sombra, movimiento con `prefers-reduced-motion`) en `packages/ui-kit/src/tokens.css`, expuestos
+a Tailwind v4 con `@theme inline`. Primeros componentes sin dependencias: Button (4 variantes × 2
+tamaños), IconButton (toggle de herramienta con aria-pressed), Kbd, Badge (incl. tono `ai`).
+Kitchen Sink en `/dev/ui.html` (publicado en Pages, excluido del precache offline). Tests: contraste AA
+de ambos temas + "sin colores sueltos" en componentes (Vitest), y E2E de tema/foco/aria (Playwright).
+Hallazgos: (1) cuatro tokens del spec no pasaban AA → ajustados, ver design-system.md §2;
+(2) en Tailwind v4 `outline-none` anula `focus-visible:outline-2` (el anillo de foco quedaba
+invisible) → lo atrapó el E2E. Pendiente para S0-10/S1-06: los primitivos sobre Radix (Tooltip,
+Popover, Menu, Dialog, Select...) y auto-hospedar Inter/JetBrains Mono (hoy caen a la fuente del
+sistema; requiere ADR por la dependencia).
 
 **S0-01 — resultado (2026-09-20)**: soporte confirmado, ADR-001 se sostiene sin cambios de fondo.
 WebGPU llegó a Candidate Recommendation en marzo 2026, ~82–85% de cobertura global (caniuse).
