@@ -29,7 +29,7 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ✅ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
 | S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | ✅ |
-| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | 🔄 |
+| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | ✅ (ver memory.md: presupuesto de subida en capas-tile) |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
 | S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ⬜ |
 | S0-12 | README con posicionamiento, capturas del diseño, roadmap | ⬜ |

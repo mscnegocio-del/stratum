@@ -35,6 +35,17 @@
 - [x] **S0-08 medido en GPU real (2026-10-05)**: Intel gen-9 integrada (gama baja), Chrome, 4K,
   canvas 1920x913 @1.25x → sweep **OK**: frame p50 16.70 / p95 16.90 ms, hilo principal p95 1.10 ms.
   ADR-001 se sostiene incluso en GPU integrada. (max 16983 ms = pestaña en segundo plano, ignorar.)
+- [x] **S0-09 medido en GPU real (2026-10-05)**, Intel gen-9, 4K, sweep de 600 frames:
+  | capas | frame p50 | frame p95 | main p95 | veredicto |
+  |---|---|---|---|---|
+  | 20 | 16.70 | 33.30 | 2.20 | fuera |
+  | 10 | 16.70 | 32.90 | 2.80 | fuera |
+  | 4  | 16.70 | 16.90 | 2.00 | OK |
+  Lectura: p50 a 60 fps en todos los casos → el blending en régimen estable cabe incluso con 20 capas.
+  p95 casi idéntico con 10 y 20 capas → NO escala con el loop del shader; son frames sueltos con
+  subidas de tiles (4 tiles × N capas de `copyExternalImageToTexture` por frame). Conclusión para
+  S1-03: el presupuesto de subida debe medirse en **capas-tile por frame** (≈16), no en tiles.
+  ADR-001 se sostiene.
 - [ ] **S0-08 Spike WebGPU** (detalle histórico): construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
   Motor mínimo en `packages/engine`: `createGpuContext`, `TextureQuadRenderer` (quad.wgsl),
   `viewport.ts` (fit/zoom-bajo-el-cursor/pan, con tests) y `FrameTimer` (p50/p95/max).
@@ -71,7 +82,7 @@
 ## 🔴 Bloqueantes
 - S0-09 no se pudo medir en producción: el service worker servía index.html en vez de
   /stratum/spike-layers.html (denylist con `^` no casaba con el subpath de Pages). Corregido en
-  rama `fix/pwa-spike-denylist`; falta mergear, desplegar y repetir la medición.
+  rama `fix/pwa-spike-denylist` (pendiente de PR/merge). Se midió igual con `?layers=N`.
 
 ## ❓ Pendiente de confirmar con el autor
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
