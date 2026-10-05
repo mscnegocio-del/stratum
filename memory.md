@@ -1,5 +1,5 @@
 # Estado actual — Stratum
-> Última actualización: 2026-09-20 (sesión 2: monorepo, spikes S0-08/S0-09, revalidación S0-01, PWA S0-06)
+> Última actualización: 2026-10-05 (sesión 4: S0-08 y S0-09 medidos en GPU real, ADR-001 confirmado)
 
 ## ✅ Completado
 - [x] Análisis del repo de referencia robbietilton/Compositor (Swift/macOS, MIT)
@@ -21,10 +21,32 @@
 - [x] S0-01 Soporte de WebGPU revalidado (caniuse + gpuweb): ~82–85% global, Candidate Recommendation
   desde marzo 2026. ADR-001 se sostiene. Firefox en Linux y Android sigue sin WebGPU por defecto →
   el fallback WebGL2 no es opcional a corto plazo. Detalle en process/decisions.md ADR-001.
+- [x] **S0-06 PWA base + deploy a GitHub Pages.** Manifiesto + service worker offline con
+  `vite-plugin-pwa`/Workbox (ADR-017), verificado con Playwright (SW `activo`, la app sigue
+  cargando con la red cortada). Repo pasado a público y GitHub Pages activado (Settings → Pages →
+  Source: GitHub Actions) — ambos confirmados por API (`visibility: public`, `has_pages: true`).
+  Deploy real disparado y **exitoso**: build + deploy en verde
+  (https://github.com/mscnegocio-del/stratum/actions/runs/35549589177). Sitio publicado en
+  **https://mscnegocio-del.github.io/stratum/** — **confirmado visualmente por el autor desde
+  móvil**: carga "Stratum", el subtítulo y "WebGPU disponible". S0-06 cerrado end-to-end.
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
-- [ ] **S0-08 Spike WebGPU**: construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
+- [x] **S0-08 medido en GPU real (2026-10-05)**: Intel gen-9 integrada (gama baja), Chrome, 4K,
+  canvas 1920x913 @1.25x → sweep **OK**: frame p50 16.70 / p95 16.90 ms, hilo principal p95 1.10 ms.
+  ADR-001 se sostiene incluso en GPU integrada. (max 16983 ms = pestaña en segundo plano, ignorar.)
+- [x] **S0-09 medido en GPU real (2026-10-05)**, Intel gen-9, 4K, sweep de 600 frames:
+  | capas | frame p50 | frame p95 | main p95 | veredicto |
+  |---|---|---|---|---|
+  | 20 | 16.70 | 33.30 | 2.20 | fuera |
+  | 10 | 16.70 | 32.90 | 2.80 | fuera |
+  | 4  | 16.70 | 16.90 | 2.00 | OK |
+  Lectura: p50 a 60 fps en todos los casos → el blending en régimen estable cabe incluso con 20 capas.
+  p95 casi idéntico con 10 y 20 capas → NO escala con el loop del shader; son frames sueltos con
+  subidas de tiles (4 tiles × N capas de `copyExternalImageToTexture` por frame). Conclusión para
+  S1-03: el presupuesto de subida debe medirse en **capas-tile por frame** (≈16), no en tiles.
+  ADR-001 se sostiene.
+- [ ] **S0-08 Spike WebGPU** (detalle histórico): construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
   Motor mínimo en `packages/engine`: `createGpuContext`, `TextureQuadRenderer` (quad.wgsl),
   `viewport.ts` (fit/zoom-bajo-el-cursor/pan, con tests) y `FrameTimer` (p50/p95/max).
   **Pendiente: correrlo en la máquina de referencia** — el contenedor no tiene GPU. El camino completo
@@ -46,15 +68,6 @@
   `copyExternalImageToTexture` (~40 ms/copia) como para juzgar el costo de blending en régimen
   estable — solo se validó a escala reducida (`?layers=4&width=768`): compone sin costuras entre
   tiles, hilo principal p50 0.23 ms una vez subidas.
-- [ ] **S0-06 PWA base**: construida y verificada con Playwright — service worker queda `activo` y,
-  con la red cortada, la app sigue cargando desde caché (Workbox vía `vite-plugin-pwa`, ADR-017).
-  Precache excluye a propósito las páginas de spike. Iconos son un mark provisional generado por
-  código (`apps/web/public/icons/mark.svg`), a reemplazar en S0-10/S0-12.
-  **Falta un paso manual tuyo, no lo puedo hacer por API**: activar GitHub Pages en
-  Settings → Pages → Source: "GitHub Actions". El workflow `.github/workflows/deploy.yml` ya está
-  y dispara en push a `main` (o manual), pero fallará hasta que actives Pages y hasta el primer
-  merge a `main`.
-
 ## ⚠️ Decisiones vigentes clave (detalle en process/decisions.md)
 - ADR-001 WebGPU como motor principal, WGSL a mano (revalidado en S0-01: ~82–85% soporte global;
   Firefox en Linux/Android sigue sin default → WebGL2 de fallback sigue siendo obligatorio)
@@ -67,17 +80,19 @@
 - ADR-017 vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano
 
 ## 🔴 Bloqueantes
-- Ninguno
+- Ninguno (bug del SW con spikes bajo /stratum/ corregido en fix/pwa-spike-denylist)
 
 ## ❓ Pendiente de confirmar con el autor
-- **Acción tuya, no automatizable**: activar GitHub Pages en Settings → Pages → Source:
-  "GitHub Actions" del repo `mscnegocio-del/stratum`. Sin esto, `.github/workflows/deploy.yml`
-  fallará aunque el resto de S0-06 esté listo.
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
 - **TypeScript 7.0 ya está publicado** (port nativo a Go, compilación mucho más rápida). El monorepo
   quedó en 5.9.3 por prudencia; migrar merece su propio ADR y una rama aparte.
 - Biome 2.5 cubre lint + format (reemplaza ESLint + Prettier); si se prefiere el par clásico, decidirlo
   antes de escribir más código.
+
+## ✅ Completado (sesión 3, 2026-09-21 cont.)
+- [x] Definido presupuesto preliminar de VRAM en process/performance.md (2 GB mínimo / 4 GB+
+  recomendado, estimado a partir de tiles 256×256 RGBA16F de ADR-006). **Sin medir aún** — queda
+  atado al mismo pendiente de correr los sweeps de S0-08/S0-09 en máquina con GPU real.
 
 ## 📌 Próximos pasos (próxima sesión)
 0. Re-confirmar modelos de IA (BiRefNet vs BEN v2, MobileSAM2) recién al llegar al sprint de IA, no antes.
@@ -88,6 +103,10 @@
    vía `?layers=N` para aislar el costo).
 2. Llevar la carga progresiva de tiles (`UPLOAD_BUDGET_PER_FRAME`, hallazgo de S0-09) al diseño de
    la LRU con presupuesto de VRAM que architecture.md ya prevé para S1-03.
-3. Activar GitHub Pages (ver "Pendiente de confirmar con el autor") y mergear a `main` para
-   verificar el primer deploy real de S0-06.
-4. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+3. Definir tokens del design system en Penpot/Figma (S0-10) y luego ui-kit + Kitchen Sink (S0-11).
+4. S0-07: estudiar Graphite (dispatcher, brush GPU, persistence) — sigue pendiente, no se tocó hoy.
+
+## 🏁 Cierre de sesión 2 (2026-09-21)
+Sprint 0 cerrado: S0-01, S0-02, S0-03, S0-04, S0-05, S0-06, S0-13. Quedan abiertos S0-07, S0-10,
+S0-11, S0-12, y S0-08/S0-09 construidos pero sin medir en máquina con GPU real. Repo público, CI y
+deploy funcionando en GitHub Actions, sitio en producción confirmado visualmente. Sin bloqueantes.

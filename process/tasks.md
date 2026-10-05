@@ -26,10 +26,10 @@ Objetivo: base técnica y de diseño lista; riesgos de WebGPU despejados.
 | S0-03 | TS strict, Biome (lint+format), path aliases, `pnpm check` | ✅ |
 | S0-04 | Vitest + Playwright configurados con 1 test de ejemplo cada uno | ✅ |
 | S0-05 | CI GitHub Actions: check, test, build, bench (placeholder) | ✅ |
-| S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | 🔄 |
+| S0-06 | PWA base (manifest, service worker, offline) + deploy a GitHub Pages | ✅ |
 | S0-07 | Estudiar Graphite: dispatcher, brush GPU, persistence (2–3 días, notas en graphite-reference.md) | ⬜ |
-| S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | 🔄 |
-| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | 🔄 |
+| S0-08 | Spike WebGPU: textura 4K, zoom/pan 60 fps, medir | ✅ |
+| S0-09 | Spike: 20 capas tileadas con blend Normal/Multiply en WGSL | ✅ (ver memory.md: presupuesto de subida en capas-tile) |
 | S0-10 | Diseño en Penpot/Figma: layout completo + tokens + 10 componentes clave | ⬜ |
 | S0-11 | `packages/ui-kit`: tokens.css + Tailwind v4 @theme + página Kitchen Sink | ⬜ |
 | S0-12 | README con posicionamiento, capturas del diseño, roadmap | ⬜ |
@@ -78,10 +78,21 @@ red cortada (`context.setOffline(true)`) la app sigue cargando desde caché. Pre
 propósito `spike.html`/`spike-layers.html` (no son parte de la app real). Iconos son un mark
 provisional generado por código (`apps/web/public/icons/mark.svg` + PNGs derivados) — reemplazar en
 S0-10/S0-12 cuando exista diseño real.
-Workflow `.github/workflows/deploy.yml` creado (build → `actions/deploy-pages`), dispara en push a
-`main` o manualmente. **Falta un paso manual de una sola vez que no puedo hacer por API**: activar
-GitHub Pages en Settings → Pages → Source: "GitHub Actions" del repo. Sin eso el deploy fallará
-aunque el workflow esté bien. Falta también el primer merge a `main` para que se dispare.
+Rama `main` creada (2026-09-21) y CI corrió en GitHub Actions real sobre ella: **verde**
+(https://github.com/mscnegocio-del/stratum/actions/runs/35549121177). El workflow Deploy también
+disparó y **falló**, como se esperaba: GitHub Pages con repos privados requiere plan pago
+(Pro/Team/Enterprise) — con el repo privado, Settings → Pages ni siquiera muestra el selector de
+"Source", solo la sección de dominio. El autor decidió hacer el repo público para resolverlo.
+**Dos pasos manuales tuyos, no puedo hacerlos yo (ni por git ni con las herramientas de GitHub
+disponibles en esta sesión)**:
+1. Settings → General → Danger Zone → Change repository visibility → **Public**.
+2. Recién entonces: Settings → Pages → Source: **"GitHub Actions"**.
+**Cerrado (2026-09-21)**: ambos pasos hechos, confirmado por API (`visibility: public`,
+`has_pages: true`). Deploy re-disparado manualmente
+(https://github.com/mscnegocio-del/stratum/actions/runs/35549589177) — ambos jobs (`build`,
+`deploy`) en `success`. Sitio publicado en **https://mscnegocio-del.github.io/stratum/** —
+**confirmado visualmente por el autor** (captura desde móvil, 2026-09-21): carga "Stratum", el
+subtítulo y "WebGPU disponible". S0-06 cerrado end-to-end.
 
 ## Sprint 1 — Canvas y documento
 S1-01 Core: Document, PixelLayer, Group, TileMap · S1-02 Command + History (snapshots de tiles) ·

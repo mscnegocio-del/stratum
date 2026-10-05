@@ -18,7 +18,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
         globIgnores: ['spike.html', 'spike-layers.html', '**/spike*.{js,css}'],
-        navigateFallbackDenylist: [/^\/spike(-layers)?\.html$/],
+        navigateFallbackDenylist: [/\/spike(-layers)?\.html$/],
       },
       manifest: {
         id: '/',
