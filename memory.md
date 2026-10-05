@@ -32,7 +32,10 @@
 
 ## 🔄 En progreso
 - [ ] Sprint 0 — Fundaciones (ver process/tasks.md): quedan S0-01, S0-06 a S0-12
-- [ ] **S0-08 Spike WebGPU**: construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
+- [x] **S0-08 medido en GPU real (2026-10-05)**: Intel gen-9 integrada (gama baja), Chrome, 4K,
+  canvas 1920x913 @1.25x → sweep **OK**: frame p50 16.70 / p95 16.90 ms, hilo principal p95 1.10 ms.
+  ADR-001 se sostiene incluso en GPU integrada. (max 16983 ms = pestaña en segundo plano, ignorar.)
+- [ ] **S0-08 Spike WebGPU** (detalle histórico): construido y funcionando (`pnpm dev` → http://localhost:5173/spike.html).
   Motor mínimo en `packages/engine`: `createGpuContext`, `TextureQuadRenderer` (quad.wgsl),
   `viewport.ts` (fit/zoom-bajo-el-cursor/pan, con tests) y `FrameTimer` (p50/p95/max).
   **Pendiente: correrlo en la máquina de referencia** — el contenedor no tiene GPU. El camino completo
@@ -66,7 +69,9 @@
 - ADR-017 vite-plugin-pwa (Workbox) para el service worker, no uno escrito a mano
 
 ## 🔴 Bloqueantes
-- Ninguno
+- S0-09 no se pudo medir en producción: el service worker servía index.html en vez de
+  /stratum/spike-layers.html (denylist con `^` no casaba con el subpath de Pages). Corregido en
+  rama `fix/pwa-spike-denylist`; falta mergear, desplegar y repetir la medición.
 
 ## ❓ Pendiente de confirmar con el autor
 - Herramienta de diseño: Penpot (recomendado, open source) o Figma
