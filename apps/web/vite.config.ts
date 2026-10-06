@@ -17,8 +17,9 @@ export default defineConfig({
       includeAssets: ['icons/mark.svg'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
-        globIgnores: ['spike.html', 'spike-layers.html', '**/spike*.{js,css}'],
-        navigateFallbackDenylist: [/\/spike(-layers)?\.html$/],
+        globIgnores: ['spike.html', 'spike-layers.html', '**/dev/**', '**/spike*.{js,css}'],
+        // Sin ancla ^: en GitHub Pages las rutas viven bajo /stratum/.
+        navigateFallbackDenylist: [/\/spike(-layers)?\.html$/, /\/dev\//],
       },
       manifest: {
         id: '/',
@@ -30,9 +31,9 @@ export default defineConfig({
         start_url: '.',
         scope: '.',
         display: 'standalone',
-        // Mismo tono que packages/ui-kit/src/tokens.css (--color-canvas-backdrop).
-        background_color: '#0d0d0f',
-        theme_color: '#0d0d0f',
+        // Mismo tono que --bg-app en packages/ui-kit/src/tokens.css.
+        background_color: '#17181b',
+        theme_color: '#17181b',
         icons: [
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
@@ -53,6 +54,8 @@ export default defineConfig({
         // Spikes de Sprint 0; salen del build cuando el motor real los reemplaza.
         spike: fileURLToPath(new URL('./spike.html', import.meta.url)),
         'spike-layers': fileURLToPath(new URL('./spike-layers.html', import.meta.url)),
+        // Kitchen Sink del ui-kit (S0-11): referencia viva, se publica pero no se cachea offline.
+        'dev/ui': fileURLToPath(new URL('./dev/ui.html', import.meta.url)),
       },
     },
   },

@@ -21,13 +21,25 @@ Grises neutros ligeramente fríos, nunca negro puro (fatiga visual y mala lectur
 --border-strong #3B3C43
 --text-primary  #EDEDEF
 --text-secondary#A1A1AA
---text-muted    #71717A
---accent        #5B8CFF   foco, selección, herramienta activa (único color de marca en UI)
+--text-muted    #8B8B94   (era #71717A: 3.29:1 sobre paneles, no pasaba AA)
+--accent        #5F8FFF   foco, selección, herramienta activa (único color de marca en UI)
+                          (era #5B8CFF: 4.47:1 sobre --bg-elevated, ajuste mínimo)
 --accent-hover  #7AA2FF
---success #3FB950 · --warning #D29922 · --danger #F85149
+--accent-fill   #3A6BE6   relleno de botón primario (blanco sobre --accent daba 3.16:1)
+--accent-fill-hover #3565E0 · --on-accent #FFFFFF
+--success #3FB950 · --warning #D29922 · --danger #FF5F57 (era #F85149: 4.21:1 sobre elevated)
 --ai            #B28CFF   exclusivo para funciones de IA local (identidad visual del pilar #4)
 ```
 Regla: el acento se usa con moderación (≤ 5% de la UI visible). Validar contraste AA en ambos temas.
+
+**Implementado en S0-11** (`packages/ui-kit/src/tokens.css`), con tema claro vía `<html data-theme="light">`.
+El contraste AA de ambos temas lo verifica `packages/ui-kit/tests/tokens.test.ts` (falla el CI si un
+token deja de cumplir). Utilidades Tailwind que exponen los tokens:
+`bg-app/canvas/panel/elevated/hover/active` · `border-line-subtle/strong` · `text-fg`, `text-fg-secondary`,
+`text-fg-muted` · `accent`, `accent-fill`, `on-accent`, `success`, `warning`, `danger`, `ai` ·
+`text-micro/ui/title/dialog/display` · `rounded-input/button/panel/dialog` · `shadow-float` ·
+`ease-enter/exit` · duraciones con `duration-(--duration-micro|popover|dialog)`.
+Valores provisionales hasta que S0-10 (diseño en Penpot/Figma) los apruebe.
 
 ## 3. Tipografía
 - UI: **Inter** (variable, con `font-feature-settings: 'cv11','ss01','tnum'` en números).
